@@ -29,7 +29,23 @@ body {
   max-width: 720px;
 }
 
-.app__header { text-align: center; margin-bottom: 24px; }
+.app__header { text-align: center; margin-bottom: 24px; position: relative; }
+
+.help-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.help-btn:hover { color: var(--text); border-color: var(--accent); }
 .app__title { font-size: 2.4rem; margin: 0; }
 .app__by { color: var(--accent); font-weight: 600; }
 .app__subtitle { color: var(--text-dim); margin: 8px 0 0; }
@@ -74,6 +90,53 @@ body {
 .segmented__btn.is-active small { opacity: 0.95; }
 
 .info { cursor: help; color: var(--text-dim); font-weight: 400; }
+
+/* Device badge */
+.badge {
+  margin: -8px 0 18px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+}
+.badge--ok { background: rgba(63, 185, 80, 0.12); border: 1px solid rgba(63,185,80,0.4); color: #56d364; }
+.badge--warn { background: rgba(210, 153, 34, 0.12); border: 1px solid rgba(210,153,34,0.4); color: #e3b341; }
+
+/* Help / welcome modal */
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; z-index: 50;
+}
+.modal[hidden] { display: none; }
+.modal__box {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 520px; width: 100%;
+  padding: 28px;
+  max-height: 88vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.modal__box h2 { margin: 0 0 14px; font-size: 1.3rem; }
+.modal__close {
+  position: absolute; top: 14px; right: 14px;
+  background: transparent; border: 0; color: var(--text-dim);
+  font-size: 1.1rem; cursor: pointer; line-height: 1;
+}
+.modal__close:hover { color: var(--text); }
+.modal__steps { margin: 0 0 16px; padding-left: 20px; line-height: 1.6; color: var(--text); }
+.modal__steps ul { margin: 6px 0; }
+.modal__steps li { margin-bottom: 8px; }
+.modal__tip {
+  background: var(--bg-input); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 14px; font-size: 0.88rem;
+  color: var(--text-dim); line-height: 1.5; margin: 0 0 18px;
+}
+.modal .btn--primary { width: 100%; }
 
 .field { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
 .field__label { font-size: 0.85rem; font-weight: 600; color: var(--text-dim); }

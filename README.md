@@ -5,19 +5,23 @@ A tiny, free, **100% client-side** text-to-speech web app with **two engines**. 
 | Mode | Engine | Voices | Audio download | Load |
 |------|--------|--------|----------------|------|
 | ⚡ **Instant** | Browser [Web Speech API](https://developer.mozilla.org/docs/Web/API/SpeechSynthesis) | Whatever your OS provides (3 on Windows/Chrome; more in Edge) | ❌ not possible | Instant |
-| 🎙️ **Studio** | [Kokoro-82M](https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX) neural model, run locally (WebGPU/WASM) | **28 built-in** (US/UK, male/female) | ✅ **WAV download** | One-time model download (~80 MB), then cached |
+| 🎙️ **Studio** | [Kokoro-82M](https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX) neural model, run locally | **28 built-in** (US/UK, male/female) | ✅ **WAV download** | One-time model download (~160 MB on GPU), then cached |
 
 ## Features
 
-- 🎙️ **28 neural voices** in Studio mode + every OS voice in Instant mode
+- 🎙️ **28 neural voices** in Studio mode (with ⭐ "Most natural" picks) + every OS voice in Instant mode
+- ⚡ **GPU-accelerated** — auto-detects WebGPU and uses the GPU-native model (fp16/fp32). Typically **faster than realtime**; falls back to CPU automatically. A badge shows which mode you're in.
+- 🚀 **Progressive playback** — long text is split into sentences; the first sentence starts playing within seconds while the rest render.
 - ⬇️ **Download generated speech as a WAV file** (Studio mode)
 - 🎚️ Adjustable **speed**, **volume**, and (Instant only) **pitch**
-- ⚡ **Quality selector** — Fast (q8, ~80 MB) or Best (fp32, ~326 MB)
+- ❓ **Built-in help / welcome window** for first-time users
 - ⏯️ Speak / Pause / Resume / Stop + built-in audio player
 - 💾 Remembers your engine, voice, and settings (saved locally)
 - ⌨️ `Ctrl/Cmd + Enter` to speak
 - 🔒 Private by design — text and audio never leave your device
 - 📦 Zero dependencies, zero build step — Kokoro streams from a CDN, so the repo stays tiny
+
+> **Performance note:** the model dtype is matched to the device — `fp16`/`fp32` on WebGPU (GPU-native, fast) and `q8` on CPU. Using a `q8` quantized model on the GPU is ~14× slower, so it's avoided automatically.
 
 ## Run locally
 

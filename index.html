@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Free text-to-speech in your browser. Instant browser voices, or neural Kokoro voices with downloadable audio. No servers, no sign-up." />
+  <meta name="description" content="Free text-to-speech in your browser. Natural neural voices, downloadable audio, GPU-accelerated. No servers, no sign-up." />
   <title>Text To Speech by Ashen</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔊</text></svg>" />
   <link rel="stylesheet" href="style.css" />
@@ -11,8 +11,9 @@
 <body>
   <main class="app">
     <header class="app__header">
+      <button id="help" class="help-btn" type="button" title="How to use">❓ Help</button>
       <h1 class="app__title">🔊 Text To Speech <span class="app__by">by Ashen</span></h1>
-      <p class="app__subtitle">Free text-to-speech. Runs 100% in your browser — nothing is uploaded.</p>
+      <p class="app__subtitle">Free, natural-sounding text-to-speech. Runs 100% in your browser — nothing is uploaded.</p>
     </header>
 
     <section class="card">
@@ -20,13 +21,15 @@
       <div class="segmented" role="tablist" aria-label="Engine">
         <button id="engInstant" class="segmented__btn is-active" role="tab" type="button">
           ⚡ Instant
-          <small>browser voices · no download</small>
+          <small>fastest · basic voices</small>
         </button>
         <button id="engStudio" class="segmented__btn" role="tab" type="button">
           🎙️ Studio
-          <small>neural · downloadable audio</small>
+          <small>natural voices · downloadable</small>
         </button>
       </div>
+
+      <div id="deviceBadge" class="badge" hidden></div>
 
       <label class="field">
         <span class="field__label">Text to speak</span>
@@ -38,16 +41,6 @@
         <label class="field">
           <span class="field__label">Voice</span>
           <select id="voice" class="field__input"></select>
-        </label>
-
-        <label class="field" id="qualityField" hidden>
-          <span class="field__label">Quality
-            <span class="info" title="Fast = ~80 MB download, quick. Best = ~326 MB, highest fidelity. Downloaded once, then cached.">ⓘ</span>
-          </span>
-          <select id="quality" class="field__input">
-            <option value="q8" selected>Fast — q8 (~80 MB)</option>
-            <option value="fp32">Best — fp32 (~326 MB)</option>
-          </select>
         </label>
 
         <label class="field">
@@ -84,10 +77,31 @@
     </section>
 
     <footer class="app__footer">
-      <span>⚡ Instant = browser <strong>Web Speech API</strong> · 🎙️ Studio = <strong>Kokoro-82M</strong> neural (runs locally) · No data leaves your device</span>
+      <span>⚡ Instant = browser voices · 🎙️ Studio = <strong>Kokoro-82M</strong> neural, GPU-accelerated · No data leaves your device</span>
       <a href="https://github.com/SHALITH22/Text-To-Speech-by-Ashen" target="_blank" rel="noopener">View source on GitHub</a>
     </footer>
   </main>
+
+  <!-- Help / welcome modal -->
+  <div id="modal" class="modal" hidden>
+    <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button id="modalClose" class="modal__close" type="button" aria-label="Close">✕</button>
+      <h2 id="modalTitle">👋 Welcome — how to use</h2>
+      <ol class="modal__steps">
+        <li><b>Type or paste</b> your text in the big box.</li>
+        <li>Pick a <b>mode</b> at the top:
+          <ul>
+            <li><b>⚡ Instant</b> — starts speaking immediately using your device's built-in voices. No download. Best for quick reads.</li>
+            <li><b>🎙️ Studio</b> — natural neural voices you can <b>download as audio</b>. The first time, it downloads the voice model <b>once</b> (then it's cached and fast forever).</li>
+          </ul>
+        </li>
+        <li>Choose a <b>⭐ Most natural</b> voice for the most human sound, then set <b>Speed</b> and <b>Volume</b>.</li>
+        <li>Hit <b>Speak / Generate</b>. In Studio mode, press <b>⬇ Download WAV</b> to save the audio.</li>
+      </ol>
+      <p class="modal__tip">💡 <b>Speed tip:</b> Studio mode is fastest on Chrome or Edge (uses your graphics card). The badge under the mode buttons shows whether you're on fast <b>GPU</b> or slower <b>CPU</b> mode.</p>
+      <button id="modalGot" class="btn btn--primary" type="button">Got it — let's go</button>
+    </div>
+  </div>
 
   <script src="app.js"></script>
 </body>
