@@ -156,13 +156,13 @@
 
   // ---------------------------------------------------------------- compute device
   async function pickCompute() {
+    // NOTE: always fp32 on WebGPU. fp16 is smaller but produces garbled/noisy
+    // audio ("cha-cha" static) on many GPUs because Kokoro loses too much
+    // precision in half-float. fp32 = clean speech and still GPU-fast.
     if (navigator.gpu) {
       try {
         const adapter = await navigator.gpu.requestAdapter();
-        if (adapter) {
-          const f16 = adapter.features && adapter.features.has("shader-f16");
-          return { device: "webgpu", dtype: f16 ? "fp16" : "fp32", label: f16 ? "⚡ GPU accelerated (fp16)" : "⚡ GPU accelerated (fp32)" };
-        }
+        if (adapter) return { device: "webgpu", dtype: "fp32", label: "⚡ GPU accelerated" };
       } catch (_) {}
     }
     return { device: "wasm", dtype: "q8", label: "🐢 CPU mode — slower (open in Chrome/Edge for GPU speed)" };
@@ -226,9 +226,8 @@
     try {
       state.kokoro = await loadModel(c.device, c.dtype);
     } catch (e) {
-      console.warn("Primary compute failed, falling back:", e);
-      if (c.device === "webgpu" && c.dtype === "fp16") { c.dtype = "fp32"; c.label = "⚡ GPU accelerated (fp32)"; await showDeviceBadge(); state.kokoro = await loadModel("webgpu", "fp32"); }
-      else if (c.device === "webgpu") { c.device = "wasm"; c.dtype = "q8"; c.label = "🐢 CPU mode — slower"; await showDeviceBadge(); state.kokoro = await loadModel("wasm", "q8"); }
+      console.warn("Primary compute failed, falling back to CPU:", e);
+      if (c.device === "webgpu") { c.device = "wasm"; c.dtype = "q8"; c.label = "🐢 CPU mode — slower"; await showDeviceBadge(); state.kokoro = await loadModel("wasm", "q8"); }
       else throw e;
     }
     setProgress(null);

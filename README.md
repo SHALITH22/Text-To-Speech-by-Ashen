@@ -10,7 +10,7 @@ A tiny, free, **100% client-side** text-to-speech web app with **two engines**. 
 ## Features
 
 - 🎙️ **28 neural voices** in Studio mode (with ⭐ "Most natural" picks) + every OS voice in Instant mode
-- ⚡ **GPU-accelerated** — auto-detects WebGPU and uses the GPU-native model (fp16/fp32). Typically **faster than realtime**; falls back to CPU automatically. A badge shows which mode you're in.
+- ⚡ **GPU-accelerated** — auto-detects WebGPU and uses the full-precision (fp32) model. Typically **faster than realtime**; falls back to CPU automatically. A badge shows which mode you're in.
 - 🚀 **Progressive playback** — long text is split into sentences; the first sentence starts playing within seconds while the rest render.
 - ⬇️ **Download generated speech as a WAV file** (Studio mode)
 - 🎚️ Adjustable **speed**, **volume**, and (Instant only) **pitch**
@@ -21,7 +21,7 @@ A tiny, free, **100% client-side** text-to-speech web app with **two engines**. 
 - 🔒 Private by design — text and audio never leave your device
 - 📦 Zero dependencies, zero build step — Kokoro streams from a CDN, so the repo stays tiny
 
-> **Performance note:** the model dtype is matched to the device — `fp16`/`fp32` on WebGPU (GPU-native, fast) and `q8` on CPU. Using a `q8` quantized model on the GPU is ~14× slower, so it's avoided automatically.
+> **Performance & quality note:** the model dtype is matched to the device — `fp32` on WebGPU (GPU-native, fast, clean) and `q8` on CPU. Two gotchas this avoids: a `q8` model on the GPU runs ~14× slower, and an `fp16` model on the GPU produces garbled/noisy audio on many cards (too little precision for Kokoro). So GPU always uses full-precision `fp32`.
 
 ## Run locally
 
