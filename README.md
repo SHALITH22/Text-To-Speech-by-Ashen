@@ -1,53 +1,68 @@
 # 🔊 TTS — Free Text-to-Speech
 
-A tiny, free, **100% client-side** text-to-speech web app. Paste text, pick a voice, and hear it spoken — all in your browser. **No servers, no sign-up, no data collection, no downloads.**
+A tiny, free, **100% client-side** text-to-speech web app with **two engines**. No servers, no sign-up, no API keys, no data collection — everything runs in your browser.
 
-It uses the browser's built-in [Web Speech API](https://developer.mozilla.org/docs/Web/API/SpeechSynthesis), so it loads instantly and works offline once the page is open.
+| Mode | Engine | Voices | Audio download | Load |
+|------|--------|--------|----------------|------|
+| ⚡ **Instant** | Browser [Web Speech API](https://developer.mozilla.org/docs/Web/API/SpeechSynthesis) | Whatever your OS provides (3 on Windows/Chrome; more in Edge) | ❌ not possible | Instant |
+| 🎙️ **Studio** | [Kokoro-82M](https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX) neural model, run locally (WebGPU/WASM) | **28 built-in** (US/UK, male/female) | ✅ **WAV download** | One-time model download (~80 MB), then cached |
 
 ## Features
 
-- 🎙️ Choose from every voice installed in your browser/OS
-- 🎚️ Adjustable **speed**, **pitch**, and **volume**
-- ⏯️ Speak / Pause / Resume / Stop controls
-- 💾 Remembers your last voice and settings (saved locally)
+- 🎙️ **28 neural voices** in Studio mode + every OS voice in Instant mode
+- ⬇️ **Download generated speech as a WAV file** (Studio mode)
+- 🎚️ Adjustable **speed**, **volume**, and (Instant only) **pitch**
+- ⚡ **Quality selector** — Fast (q8, ~80 MB) or Best (fp32, ~326 MB)
+- ⏯️ Speak / Pause / Resume / Stop + built-in audio player
+- 💾 Remembers your engine, voice, and settings (saved locally)
 - ⌨️ `Ctrl/Cmd + Enter` to speak
-- 🔒 Private by design — text never leaves your device
-- 📦 Zero dependencies, zero build step — just three files
+- 🔒 Private by design — text and audio never leave your device
+- 📦 Zero dependencies, zero build step — Kokoro streams from a CDN, so the repo stays tiny
 
 ## Run locally
 
-No build tools needed. Either:
+No build tools needed. Serve the folder so the model loads correctly:
 
-- **Double-click `index.html`**, or
-- Serve the folder (recommended, so voices load reliably):
-  ```bash
-  # Python (if installed)
-  python -m http.server 8000
-  # then open http://localhost:8000
-  ```
+```bash
+python -m http.server 8000
+# then open http://localhost:8000
+```
+
+(Double-clicking `index.html` works for Instant mode; Studio mode needs to be served over `http://` or `https://`.)
 
 ## Deploy free on GitHub Pages
 
 1. Create a new repo named **`tts`** on GitHub.
-2. Push this folder (see commands below).
-3. In the repo: **Settings → Pages → Build and deployment → Source: `Deploy from a branch` → Branch: `main` / `root` → Save.**
-4. Your app goes live at `https://<your-username>.github.io/tts/` within a minute.
+2. Push this folder (commands below).
+3. **Settings → Pages → Source: Deploy from a branch → `main` / `root` → Save.**
+4. Live at `https://<your-username>.github.io/tts/` within a minute.
 
 ```bash
-git init
-git add .
-git commit -m "Initial commit: free client-side TTS app"
-git branch -M main
 git remote add origin https://github.com/<your-username>/tts.git
 git push -u origin main
 ```
 
-> Also works on **Cloudflare Pages**, **Netlify**, or **Vercel** — point them at this folder, no build command needed.
+> Also works on **Cloudflare Pages**, **Netlify**, or **Vercel** — no build command needed.
 
-## How it works & limitations
+## About the parameters (and ElevenLabs)
 
-- Voices and their quality come from your **operating system / browser**, not this app. Chrome and Edge on Windows expose the system (SAPI) voices; Edge can also surface higher-quality "Online (Natural)" Microsoft voices.
-- The Web Speech API **plays** audio but does not expose a way to **export it to an MP3/WAV file** — so there's no download button. If you need downloadable audio files or studio-grade neural voices, you'd need a heavier server-side or in-browser-model engine (e.g. Kokoro), which trades away this app's instant load and zero footprint.
+The UI mirrors a studio TTS layout, but **every control here actually does something** — there are no placebo sliders:
+
+| This app | What it does | ElevenLabs equivalent |
+|----------|--------------|-----------------------|
+| **Voice** | Picks 1 of 28 Kokoro voices | Voice library |
+| **Speed** | 0.5×–2× speaking rate (native) | Speed |
+| **Volume** | Output gain | (post-processing) |
+| **Quality** | Model precision / size | Model selection |
+| **Pitch** | Pitch shift *(Instant mode only)* | — |
+
+ElevenLabs' **Stability**, **Similarity Boost**, and **Style Exaggeration** are properties of *their* proprietary cloud model. No free, locally-run model (including Kokoro) exposes them, so they're intentionally **not** included rather than added as non-functional sliders. If you ever want those exact controls, you'd need ElevenLabs' paid API (an API key, which can't live safely in a public client-side app).
+
+## Notes & limitations
+
+- **Studio mode** runs fastest on browsers with **WebGPU** (Chrome/Edge). Without it, it falls back to WASM (still works, just slower). GitHub Pages can't send the COOP/COEP headers needed for multi-threaded WASM, so non-WebGPU browsers run single-threaded.
+- **Instant mode** voice quality comes from your OS/browser. Open the app in **Microsoft Edge** to access higher-quality "Online (Natural)" voices.
+- The Web Speech API (Instant mode) can only *play* audio — exporting to a file is only possible in Studio mode.
 
 ## License
 
