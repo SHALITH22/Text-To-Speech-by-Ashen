@@ -38,7 +38,7 @@ python -m http.server 8000
 4. Live at `https://<your-username>.github.io/tts/` within a minute.
 
 ```bash
-git remote add origin https://github.com/<your-username>/tts.git
+git remote add origin https://github.com/<your-username>/Text-To-Speech-by-Ashen.git
 git push -u origin main
 ```
 
