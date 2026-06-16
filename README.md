@@ -1,4 +1,4 @@
-# 🔊 TTS — Free Text-to-Speech
+# 🔊 Text To Speech by Ashen
 
 A tiny, free, **100% client-side** text-to-speech web app with **two engines**. No servers, no sign-up, no API keys, no data collection — everything runs in your browser.
 
